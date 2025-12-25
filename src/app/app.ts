@@ -30,7 +30,7 @@ export class App implements OnInit {
   };
 
   // Lien Backend (Port 3000)
-  apiUrl = 'http://localhost:3000/api/products';
+apiUrl = 'https://milsa-backend.onrender.com/api/products';
 
   constructor(private http: HttpClient) {}
 
