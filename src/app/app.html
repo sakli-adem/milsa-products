@@ -1,95 +1,116 @@
-<div style="padding: 20px; font-family: sans-serif;">
+<div class="admin-container">
   
-  <h1 style="color: #333;">Admin Milsa (Gestion Stock)</h1>
+  <h1>✨ Milsa Admin Panel</h1>
 
-  <div style="border: 2px solid #333; padding: 20px; margin-bottom: 20px; border-radius: 8px; background-color: #f9f9f9;">
-    <h2 style="margin-top: 0;">Ajouter un Parfum</h2>
+  <div class="card">
+    <h2>➕ Ajouter un Nouveau Parfum</h2>
     
-    <form (ngSubmit)="onSubmit()">
-      <div style="margin-bottom: 10px;">
-        <label><strong>Code (REF):</strong> </label>
-        <input type="text" [(ngModel)]="newProduct.code_parfum" name="code" required placeholder="Ex: MILSA-001">
-      </div>
+    <form (ngSubmit)="productForm.valid && onSubmit()" #productForm="ngForm" class="product-form">
       
-      <div style="margin-bottom: 10px;">
-        <label><strong>Nom Parfum:</strong> </label>
-        <input type="text" [(ngModel)]="newProduct.nom_parfum" name="nom" required placeholder="Ex: Oud Royal">
-      </div>
-      
-      <div style="margin-bottom: 10px;">
-        <label><strong>Categorie:</strong> </label>
-        <select [(ngModel)]="newProduct.categorie" name="cat">
-          <option value="Homme">Homme</option>
-          <option value="Femme">Femme</option>
-          <option value="Luxe">Luxe</option>
-        </select>
-      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Code Parfum (Ref) <span class="req">*</span></label>
+          <input type="text" [(ngModel)]="newProduct.code_parfum" name="code" required placeholder="Ex: 001" #code="ngModel">
+          <small *ngIf="code.invalid && code.touched" style="color: red;">Le code est obligatoire.</small>
+        </div>
+        
+        <div class="form-group">
+          <label>Nom du Parfum <span class="req">*</span></label>
+          <input type="text" [(ngModel)]="newProduct.nom_parfum" name="nom" required placeholder="Ex: Oud Royal">
+        </div>
 
-      <div style="margin-bottom: 10px;">
-        <label><strong>Image URL:</strong> </label>
-        <input type="text" [(ngModel)]="newProduct.image_url" name="img" placeholder="assets/img/...">
-      </div>
+        <div class="form-group">
+          <label>Catégorie <span class="req">*</span></label>
+          <select [(ngModel)]="newProduct.categorie" name="cat" required>
+            <option value="Homme">Homme</option>
+            <option value="Femme">Femme</option>
+            <option value="Luxe">Luxe</option>
+          </select>
+        </div>
 
-      <hr style="margin: 20px 0;">
-
-      <div style="margin-bottom: 5px;">
-        <input type="checkbox" [(ngModel)]="newProduct.dispo_15ml" name="d15"> 
-        <label> 15ML Dispo ?</label>
-        <input type="number" [(ngModel)]="newProduct.prix_15ml" name="p15" style="width: 60px; margin-left: 10px;"> DT
-      </div>
-
-      <div style="margin-bottom: 5px;">
-        <input type="checkbox" [(ngModel)]="newProduct.dispo_30ml" name="d30"> 
-        <label> 30ML Dispo ?</label>
-        <input type="number" [(ngModel)]="newProduct.prix_30ml" name="p30" style="width: 60px; margin-left: 10px;"> DT
+        <div class="form-group">
+          <label>Image URL <span class="req">*</span></label>
+          <input type="text" [(ngModel)]="newProduct.image_url" name="img" required placeholder="https://...">
+        </div>
       </div>
 
-      <div style="margin-bottom: 15px;">
-        <input type="checkbox" [(ngModel)]="newProduct.dispo_70ml" name="d70"> 
-        <label> 70ML Dispo ?</label>
-        <input type="number" [(ngModel)]="newProduct.prix_70ml" name="p70" style="width: 60px; margin-left: 10px;"> DT
+      <div class="prices-section">
+        <div class="price-group">
+          <input type="checkbox" [(ngModel)]="newProduct.dispo_15ml" name="d15" id="d15">
+          <label for="d15">15 ML</label>
+          <input type="number" [(ngModel)]="newProduct.prix_15ml" name="p15" placeholder="Prix" [required]="newProduct.dispo_15ml"> DT
+        </div>
+
+        <div class="price-group">
+          <input type="checkbox" [(ngModel)]="newProduct.dispo_30ml" name="d30" id="d30">
+          <label for="d30">30 ML</label>
+          <input type="number" [(ngModel)]="newProduct.prix_30ml" name="p30" placeholder="Prix" [required]="newProduct.dispo_30ml"> DT
+        </div>
+
+        <div class="price-group">
+          <input type="checkbox" [(ngModel)]="newProduct.dispo_70ml" name="d70" id="d70">
+          <label for="d70">70 ML</label>
+          <input type="number" [(ngModel)]="newProduct.prix_70ml" name="p70" placeholder="Prix" [required]="newProduct.dispo_70ml"> DT
+        </div>
       </div>
 
-      <button type="submit" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; font-size: 16px;">
-        + Ajouter au Stock
+      <button type="submit" class="btn-submit" [disabled]="productForm.invalid">
+        Enregistrer le Produit
       </button>
+
     </form>
   </div>
 
-  <h2>Stock Actuel</h2>
-  <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse;">
-    <thead style="background-color: #eee;">
-      <tr>
-        <th>Code</th>
-        <th>Nom</th>
-        <th>Categorie</th>
-        <th>Prix 15ml</th>
-        <th>Prix 30ml</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of products">
-        <td>{{ p.code_parfum }}</td>
-        <td>{{ p.nom_parfum }}</td>
-        <td>{{ p.categorie }}</td>
-        
-        <td>
-          <span *ngIf="p.dispo_15ml" style="color: green;">{{ p.prix_15ml }} DT</span>
-          <span *ngIf="!p.dispo_15ml" style="color: #ccc;">-</span>
-        </td>
-        <td>
-          <span *ngIf="p.dispo_30ml" style="color: green;">{{ p.prix_30ml }} DT</span>
-          <span *ngIf="!p.dispo_30ml" style="color: #ccc;">-</span>
-        </td>
+  <div class="card">
+    <h2>📦 Stock Actuel</h2>
+    
+    <div class="table-responsive">
+      <table class="stock-table">
+        <thead>
+          <tr>
+            <th>Image</th> <th>Code</th>
+            <th>Nom</th>
+            <th>Catégorie</th>
+            <th>15ml</th>
+            <th>30ml</th>
+            <th>70ml</th> <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of products">
+            <td>
+              <img [src]="p.image_url" alt="Parfum" class="product-thumb" *ngIf="p.image_url">
+              <span *ngIf="!p.image_url">📷</span>
+            </td>
+            
+            <td><strong>{{ p.code_parfum }}</strong></td>
+            <td>{{ p.nom_parfum }}</td>
+            <td><span class="badge">{{ p.categorie }}</span></td>
+            
+            <td>
+              <span *ngIf="p.dispo_15ml" class="price-tag">{{ p.prix_15ml }} DT</span>
+              <span *ngIf="!p.dispo_15ml" class="unavailable">-</span>
+            </td>
 
-        <td style="text-align: center;">
-          <button (click)="deleteProduct(p.code_parfum)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;">
-            Supprimer
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <td>
+              <span *ngIf="p.dispo_30ml" class="price-tag">{{ p.prix_30ml }} DT</span>
+              <span *ngIf="!p.dispo_30ml" class="unavailable">-</span>
+            </td>
+
+            <td>
+              <span *ngIf="p.dispo_70ml" class="price-tag">{{ p.prix_70ml }} DT</span>
+              <span *ngIf="!p.dispo_70ml" class="unavailable">-</span>
+            </td>
+
+            <td>
+              <button (click)="deleteProduct(p.code_parfum)" class="btn-delete">
+                Supprimer
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 </div>

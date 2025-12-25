@@ -1,0 +1,242 @@
+// 1. Import lazim bch na7iw el machakel mta3 darken/lighten
+@use 'sass:color';
+
+// Variables
+$primary-color: #4f46e5; // Indigo modern
+$secondary-color: #1f2937; // Dark Grey
+$success-color: #10b981; // Green
+$danger-color: #ef4444; // Red
+$bg-color: #f3f4f6; // Light Grey Background
+$card-bg: #ffffff;
+$border-radius: 12px;
+
+// Global Reset
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: $bg-color;
+  color: $secondary-color;
+}
+
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h1 {
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+}
+
+// Cards Style (Form & Table)
+.card {
+  background: $card-bg;
+  border-radius: $border-radius;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  margin-bottom: 2rem;
+
+  h2 {
+    margin-top: 0;
+    border-bottom: 2px solid $bg-color;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    color: $secondary-color;
+  }
+}
+
+// Form Styling
+.product-form {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      
+      span.req { color: $danger-color; } // Etoile rouge
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        // Correction ici (rgba)
+        box-shadow: 0 0 0 3px color.change($primary-color, $alpha: 0.1);
+      }
+    }
+  }
+
+  .prices-section {
+    background-color: #f9fafb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-around;
+
+    .price-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      label {
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      input[type="checkbox"] {
+        transform: scale(1.2);
+        cursor: pointer;
+      }
+
+      input[type="number"] {
+        width: 100px;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+      }
+    }
+  }
+
+  .btn-submit {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      // CORRECTION DU WARNING ICI:
+      // Au lieu de darken(), on utilise color.adjust
+      background-color: color.adjust($primary-color, $lightness: -10%);
+    }
+    
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Table Styling
+.table-responsive {
+  overflow-x: auto;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  thead {
+    background-color: $bg-color;
+    tr {
+      th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: $secondary-color;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #e5e7eb;
+      transition: background-color 0.1s;
+
+      &:hover {
+        background-color: #f9fafb;
+      }
+
+      td {
+        padding: 1rem;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  // Image Thumbnail
+  .product-thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+
+  .price-tag {
+    font-weight: bold;
+    color: $success-color;
+    // Correction transparence
+    background: color.change($success-color, $alpha: 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .unavailable {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  .btn-delete {
+    background-color: white;
+    color: $danger-color;
+    border: 1px solid $danger-color;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: $danger-color;
+      color: white;
+    }
+  }
+}
+
+// Mobile Adjustments
+@media (max-width: 768px) {
+  .product-form .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .prices-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
